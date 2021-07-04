@@ -1,0 +1,10 @@
+venv
+dist
+__pycache__
+build
+.idea
+.idea/workspace.xml
+*.pyc
+*.pyc
+*.pyc
+*.pyc
