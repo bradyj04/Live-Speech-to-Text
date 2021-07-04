@@ -62,6 +62,7 @@ while True:
                 data = stream.read(CHUNK)
                 frames.append(data)
                 window.refresh()
+                print("1")
 
     except:
         window['Status'].update('Length needed')
