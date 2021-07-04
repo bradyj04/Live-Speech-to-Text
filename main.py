@@ -3,7 +3,6 @@ import PySimpleGUI as sg
 import pyaudio
 pa = pyaudio.PyAudio()
 import wave
-import time
 
 # Button Fonts/Settings
 RecordButton = sg.Button('Record', key='Record', button_color="dark red", font=("Sans Serif", 12, "bold"), size=(10, 2))
@@ -87,6 +86,7 @@ while True:
                 filepath = os.path.abspath('recorded.wav')
                 window['InputFolder'].update(filepath)
                 #Updates TextBox with transcribed audio
+
             except:
                     window['Status'].update('Error, not recording')
 
