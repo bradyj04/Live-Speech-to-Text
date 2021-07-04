@@ -54,14 +54,15 @@ while True:
             #for timeelapsed in range (0, RECORD_SECONDS):
                 #window['Elapsed'].update(timeelapsed)
                 #time.sleep(1)
-
             # Updates text to match status Recording
             window['Record'].update('Recording')
             window['Status'].update('Recording...')
-            # Record function goes here
-            for i in range(0, int(RATE / CHUNK * RECORD_SECONDS)):
-                data = stream.read(CHUNK)
-                frames.append(data)
+            if ['Status']('Recording...'):
+                # Record function goes here
+                for i in range(0, int(RATE / CHUNK * RECORD_SECONDS)):
+                    data = stream.read(CHUNK)
+                    frames.append(data)
+
     except:
         window['Status'].update('Length needed')
 
