@@ -1,0 +1,188 @@
+""""
+This is a simple audio recorder, based on pyaudio.
+"""
+__author__ = "Xiangkui Li"
+
+import math
+import threading
+import wave
+from queue import Queue
+
+import numpy as np
+import pyaudio
+
+
+class Recorder:
+    """
+    This is a simple audio recorder. You can use this class to record or play audio.
+
+    Main methods:
+     - get_default_input_device_info
+     - get_default_output_device_info
+     - record
+     - get_wave_queue
+     - play
+     - close
+    """
+
+    def __init__(self, audio_format=pyaudio.paInt16, channels=2, rate=44100, chunk=1024,
+                 input_device_index=None, output_device_index=None):
+        """
+        Initialize recorder
+
+        :param audio_format: audio format. Usually `pyaudio.paInt16`
+        :param channels: audio channels.
+        :param rate: sample rate
+        :param chunk: frame chunk. Usually don't need care.
+        :param input_device_index: input device index
+        :param output_device_index: output device index
+        """
+        self._audio_format = audio_format
+        self._channels = channels
+        self._rate = rate
+        self._chunk = chunk
+        self._input_device_index = input_device_index
+        self._output_device_index = output_device_index
+        # 音频对象
+        self._audio = pyaudio.PyAudio()
+        self._stream = None
+        self._sample_size = self._audio.get_sample_size(audio_format)
+        self._wave_queue = Queue(100)
+
+    def _init_stream(self):
+        """
+        init audio stream
+        """
+        self._stream = self._audio.open(format=self._audio_format, channels=self._channels, rate=self._rate,
+                                        input=True, frames_per_buffer=self._chunk,
+                                        input_device_index=self._input_device_index,
+                                        output_device_index=self._output_device_index)
+
+    def _read_frames(self):
+        """
+        read frames from audio device
+
+        :return: frames
+        """
+        if self._stream is None:
+            self._init_stream()
+        return self._stream.read(self._chunk)
+
+    def get_device_info(self, index=None):
+        """
+        get device info.
+
+        :param index: device index. If `index` parameter is Not None, return the device info. Else return all device info.
+        :return:
+        """
+        if index:
+            return self._audio.get_device_info_by_index(index)
+        count = self._audio.get_device_count()
+        devices = []
+        for i in range(count):
+            info = self._audio.get_device_info_by_index(i)
+            devices.append('{0}: {1} | maxIn: {2}, maxOut: {3} '.format(info['index'], info['name'],
+                                                                        info['maxInputChannels'],
+                                                                        info['maxOutputChannels']))
+        try:
+            devices[self._audio.get_default_input_device_info()['index']] += '-> default input device'
+        except OSError:
+            pass
+        try:
+            devices[self._audio.get_default_output_device_info()['index']] += '-> default output device'
+        except OSError:
+            pass
+        return '\n'.join(devices)
+
+    def record(self, duration, output=None):
+        """
+        record a piece of sound.
+
+        :param duration: record sound length in second
+        :param output: If `output` is None, return a numpy data array.
+        If `output` is file path, sound data will be write to the file.
+        :return: numpy array or None
+        """
+        read_count = math.ceil(duration * self._rate / self._chunk)
+        if output is None:
+            # return numpy array
+            wave_data = np.empty((self._channels, 0))
+            for i in range(read_count):
+                frames = self._read_frames()
+                data = self._convert_frames(frames)
+                wave_data = np.concatenate((wave_data, data), axis=1)
+            return wave_data
+
+        # save data to file
+        file = wave.open(output, 'wb')
+        file.setframerate(self._rate)
+        file.setnchannels(self._channels)
+        file.setsampwidth(self._sample_size)
+        for i in range(read_count):
+            frames = self._read_frames()
+            file.writeframes(frames)
+        file.close()
+
+    def get_wave_queue(self):
+        """
+        get wave data queue. The element is numpy array format.
+
+        :return: wave queue
+        """
+
+        def _read():
+            while True:
+                frames = self._read_frames()
+                data = self._convert_frames(frames)
+                if not self._wave_queue.full():
+                    self._wave_queue.put(data)
+
+        # start a thread to read data and put to the wave queue
+        t = threading.Thread(target=_read)
+        t.setDaemon(True)
+        t.start()
+        return self._wave_queue
+
+    @staticmethod
+    def play(path):
+        """
+        play a piece of wave sound
+
+        :param path: wave file path
+        :return: None
+        """
+        wf = wave.open(path, 'rb')
+        p = pyaudio.PyAudio()
+        stream = p.open(format=p.get_format_from_width(wf.getsampwidth()),
+                        channels=wf.getnchannels(), rate=wf.getframerate(), output=True)
+        while True:
+            data = wf.readframes(1024)
+            if not data:
+                break
+            stream.write(data)
+
+        stream.stop_stream()
+        stream.close()
+        p.terminate()
+
+    def close(self):
+        """
+        close the recorder
+
+        :return: None
+        """
+        self._stream.stop_stream()
+        self._stream.close()
+        self._audio.terminate()
+
+    def _convert_frames(self, frames):
+        """
+        convert frames to numpy array
+
+        :param frames: audio frames
+        :return: numpy array
+        """
+
+        data = np.frombuffer(frames, dtype=np.int16)
+        data.shape = (-1, self._channels)
+        return data.T
