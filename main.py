@@ -57,11 +57,11 @@ while True:
             # Updates text to match status Recording
             window['Record'].update('Recording')
             window['Status'].update('Recording...')
-            if ['Status']('Recording...'):
-                # Record function goes here
-                for i in range(0, int(RATE / CHUNK * RECORD_SECONDS)):
-                    data = stream.read(CHUNK)
-                    frames.append(data)
+            # Record function goes here
+            for i in range(0, int(RATE / CHUNK * RECORD_SECONDS)):
+                data = stream.read(CHUNK)
+                frames.append(data)
+                window.refresh()
 
     except:
         window['Status'].update('Length needed')
