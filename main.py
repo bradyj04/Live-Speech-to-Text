@@ -1,5 +1,4 @@
 import os.path
-
 import PySimpleGUI as sg
 import pyaudio
 pa = pyaudio.PyAudio()
