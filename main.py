@@ -1,6 +1,5 @@
 import os.path
 import time
-
 import PySimpleGUI as sg
 import pyaudio
 pa = pyaudio.PyAudio()
@@ -73,7 +72,6 @@ while True:
                 data = stream.read(CHUNK)
                 frames.append(data)
                 window.refresh()
-                print("1")
             window['TimeRemaining'].update('0')
             window['AudioLengthInput'].update('0')
             window['Status'].update('Stopped')
@@ -101,6 +99,7 @@ while True:
                 try:
                     window['Status'].update('Processing...')
                     window.refresh()
+                    #Pastes transcribed text in text box and updates status
                     TranscribedText = r.recognize_wit(audiosource, key=WIT_KEY)
                     window.refresh()
                     window['Transcript'].update(TranscribedText)
@@ -110,13 +109,9 @@ while True:
                     window['Status'].update('Wit.ai could not understand')
                 except sr.RequestError as re:
                     window['Status'].update('Request Error: {}'.format(re))
-
             except:
                     window['Status'].update('Error, not recording')
-
     except:
         window['Status'].update('Length needed')
-
-
 # Closes Window
 window.close()
