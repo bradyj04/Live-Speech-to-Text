@@ -2,6 +2,7 @@ venv
 dist
 __pycache__
 build
+executable
 .idea
 *.pyc
 *.spec
