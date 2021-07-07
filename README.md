@@ -14,6 +14,13 @@ pip3 install wave
 pip3 install PySimpleGUI
 pip3 install pyaudio
 ```
+## Running the program
+Find the location of SpeechToText.py, open your command prompt and type:
+```bash
+python.exe [directory]\SpeechtoText.py
+```
+The file should open, and save the audio file(s) generated in the same directory as the .py file.
+
 ## Issues with PyAudio?
 Run the following command in your command prompt/ python.exe file:
 ```python
