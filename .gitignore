@@ -3,7 +3,6 @@ dist
 __pycache__
 build
 executable
-WindowsInstallers
-*.spec
 .idea
 *.pyc
+*.spec
