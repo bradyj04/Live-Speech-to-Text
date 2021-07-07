@@ -1,6 +1,6 @@
 # Live Speech-to-Text
 
-## *Internet access is currently required for this to work*
+## ~~*Internet access is currently required for this to work*~~ *with v1.0.2 offline access is now the default*
 I recommend using the main branch, it is not the default but it is the most stable/up-to-date one, as dev is for me to test some things.
 
 ## Installation
