@@ -6,3 +6,4 @@ executable
 .idea
 *.pyc
 *.spec
+*.spec
