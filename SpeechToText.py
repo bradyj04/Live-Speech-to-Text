@@ -7,9 +7,9 @@ import wave
 import speech_recognition as sr
 
 # Button Fonts/Settings
-RecordButton = sg.Button('Record', key='Record', button_color="dark red", font=("Sans Serif", 12, "bold"), size=(10, 2))
+RecordButton = sg.Button('Record', key='Record', button_color="dark red", font=("Sans Serif", 12, "bold"), size=(15, 2))
 SubmitLength = sg.Button('Submit Length', key='Submit', button_color='grey', font=("Sans Serif", 10, "bold"), size=(15, 1))
-ExitButton = sg.Button('Exit', key='Exit', button_color='red', font=("Sans Serif", 12, "bold"), size=(10, 2))
+ExitButton = sg.Button('Exit', key='Exit', button_color='red', font=("Sans Serif", 12, "bold"), size=(15, 2))
 TranscriptText = sg.Multiline(size=(50,15), key='Transcript', justification='center')
 # Defines function FileLabel, and sets text as what's defined to the right in ()
 def FileLabel(text):
@@ -30,7 +30,7 @@ WIT_KEY = "3LOWRYZO6UQ7JWONLAVWHN3DT7TU2ZXJ"
 layout = [[sg.Text("Speech-to-Text", font=('Calibri', 13, 'bold'))],
           [sg.Text('                                                                            ', key = 'Status', justification='center', font=('Sans Serif', 10, 'italic'))],
           [TimeElapsed('Time Set: '), sg.Text('0', key='TimeRemaining',size=(5, 1), justification='center',font=("Sans Serif", 10, "bold")), TimeElapsed('seconds')],
-          [FileLabel('Audio File'), sg.Input(key='InputFolder'), sg.FileBrowse(target='InputFolder')],
+          [FileLabel('Audio File'), sg.Input(key='InputFolder', size=(40, 1))],
           [sg.Text('Recording Length:', justification='left'), sg.Input(key='AudioLengthInput', size=(30, 1), justification='left'), sg.Text('seconds', justification='left')],
           [SubmitLength],
           [RecordButton, ExitButton],
