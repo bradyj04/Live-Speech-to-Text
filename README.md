@@ -23,6 +23,10 @@ python.exe [directory]\SpeechtoText.py
 ```
 The file should open, and save the audio file(s) generated in the same directory as the .py file.
 
+## Windows .exe
+If you have windows, you can download the .exe file to run it from:
+[here](https://www.mediafire.com/file/qtsh7v8kmc1m7ie/executable.zip/file)
+
 ## Issues with PyAudio/PocketSphinx?
 Run the following command in your command prompt/ python.exe file:
 ```python
