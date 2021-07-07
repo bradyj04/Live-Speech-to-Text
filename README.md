@@ -1,5 +1,7 @@
 # Live Speech-to-Text
 
+## *Internet access is currently required for this to work*
+
 ## Installation
 
 There are two installtion methods for the modules needed to run the python file (Windows only)
@@ -17,4 +19,8 @@ Run the following command in your command prompt/ python.exe file:
 ```python
 python --version
 ```
-Then find the corresponding version [here
+Then find the corresponding version [here](https://www.lfd.uci.edu/~gohlke/pythonlibs/#pyaudio) and place this in your scripts folder of python (Generally C:\python38\Scripts)
+Then run this command, but replace [your file] with what you have downloaded and placed into the scripts folder:
+```bash
+pip install C:\python38\Scripts\[your file].whl
+```
